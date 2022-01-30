@@ -1,0 +1,12 @@
+[package]
+name = "aoc-build"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.53"
+prettyplease = "0.1.2"
+regex = "1.5.4"
+syn = "1.0.86"
