@@ -98,40 +98,40 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
         Some(FnArg::Typed(PatType { ty, .. }))
             if quote!(#ty).to_string().contains("Vec < & [u8] >") =>
         {
-            quote!((crate::input::parse_input_bytes(&crate::input::input_bytes(#day)?, #sep.map(|c: char| c as u8))?))
+            quote!((::aoc::input::parse_input_bytes(&::aoc::input::input_bytes(#day)?, #sep.map(|c: char| c as u8))?))
         }
         Some(FnArg::Typed(PatType { ty, .. }))
             if quote!(#ty).to_string().contains("& [& [u8]]") =>
         {
-            quote!((&crate::input::parse_input_bytes(&crate::input::input_bytes(#day)?, #sep.map(|c: char| c as u8))?))
+            quote!((&::aoc::input::parse_input_bytes(&::aoc::input::input_bytes(#day)?, #sep.map(|c: char| c as u8))?))
         }
         Some(FnArg::Typed(PatType { ty, .. }))
             if quote!(#ty).to_string().contains("Vec < & str >") =>
         {
-            quote!((crate::input::input_string(#day)?.lines().collect()))
+            quote!((::aoc::input::input_string(#day)?.lines().collect()))
         }
         Some(FnArg::Typed(PatType { ty, .. })) if quote!(#ty).to_string().contains("& [& str]") => {
-            quote!((&crate::input::input_string(#day)?.lines().collect::<Vec<_>>()))
+            quote!((&::aoc::input::input_string(#day)?.lines().collect::<Vec<_>>()))
         }
         Some(FnArg::Typed(PatType { ty, .. }))
             if quote!(#ty).to_string().contains("& mut [& str]") =>
         {
-            quote!((&mut crate::input::input_string(#day)?.lines().collect::<Vec<_>>()))
+            quote!((&mut ::aoc::input::input_string(#day)?.lines().collect::<Vec<_>>()))
         }
         Some(FnArg::Typed(PatType { ty, .. })) if quote!(#ty).to_string().contains("& str") => {
-            quote!((&crate::input::input_string(#day)?))
+            quote!((&::aoc::input::input_string(#day)?))
         }
         Some(FnArg::Typed(PatType { ty, .. })) if quote!(#ty).to_string().contains("& [u8]") => {
-            quote!((&crate::input::input_bytes(#day)?))
+            quote!((&::aoc::input::input_bytes(#day)?))
         }
         Some(FnArg::Typed(PatType { ty, .. })) if quote!(#ty).to_string().contains("Vec <") => {
-            quote!((crate::input::parse_input(&crate::input::input_string(#day)?, #sep)?))
+            quote!((::aoc::input::parse_input(&::aoc::input::input_string(#day)?, #sep)?))
         }
         Some(FnArg::Typed(PatType { ty, .. })) if quote!(#ty).to_string().contains("& mut [") => {
-            quote!((&mut crate::input::parse_input(&crate::input::input_string(#day)?, #sep)?))
+            quote!((&mut ::aoc::input::parse_input(&::aoc::input::input_string(#day)?, #sep)?))
         }
         Some(_) => {
-            quote!((&crate::input::parse_input(&crate::input::input_string(#day)?, #sep)?))
+            quote!((&::aoc::input::parse_input(&::aoc::input::input_string(#day)?, #sep)?))
         }
         None => quote!(()),
     };

@@ -1,2 +1,2 @@
 [workspace]
-members = ["aoc-derive", "aoc-build"]
+members = ["aoc", "aoc-derive", "aoc-build"]

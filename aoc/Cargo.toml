@@ -1,0 +1,12 @@
+[package]
+name = "aoc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.53"
+aoc-derive = { path = "../aoc-derive" }
+chrono = "0.4.19"
+clap = { version = "3.0.13", features = ["derive"] }
+itertools = "0.10.3"
+lazy_static = "1.4.0"

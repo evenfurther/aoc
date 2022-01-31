@@ -47,14 +47,14 @@ pub fn build() -> anyhow::Result<()> {
                 let runner_name: syn::Ident =
                     syn::parse_str(&format!("runner_{day}_{part}_{extension}"))?;
                 let stmt: syn::Stmt = parse_quote! {
-                    crate::runners::register_runner(#day, #part, #version, crate::#mod_name::#runner_name);
+                    ::aoc::register_runner(#day, #part, #version, crate::#mod_name::#runner_name);
                 };
                 refs.push(stmt);
             }
         }
     }
     let register: syn::File = parse_quote! {
-        pub fn register() {
+        pub fn register_runners() {
             #(#refs)*
         }
     };
