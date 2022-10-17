@@ -5,7 +5,7 @@ pub static mut OVERRIDE_INPUT: Option<String> = None;
 
 pub fn input_bytes(day: usize) -> Result<Vec<u8>> {
     match { unsafe { &OVERRIDE_INPUT } } {
-        Some(s) => Ok(std::fs::read(&s).unwrap_or_else(|_| {
+        Some(s) => Ok(std::fs::read(s).unwrap_or_else(|_| {
             let mut s = s.as_bytes().to_vec();
             s.push(b'\n');
             s
