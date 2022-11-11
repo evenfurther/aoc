@@ -45,6 +45,7 @@ pub fn run<F>(register: F) -> eyre::Result<()>
 where
     F: Fn(),
 {
+    color_eyre::install().unwrap();
     let opts = Opts::parse();
     if opts.day.is_some() && opts.all {
         eyre::bail!("--all and --day are not compatible");
