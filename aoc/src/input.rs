@@ -1,4 +1,4 @@
-use anyhow::Result;
+use eyre::Result;
 use std::str::FromStr;
 
 pub static mut OVERRIDE_INPUT: Option<String> = None;

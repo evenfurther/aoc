@@ -139,9 +139,7 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
         ReturnType::Type(_, ref t) if t.to_token_stream().to_string().contains("Result < ") => {
             (quote!(#func_name #inputs), quote!(#t))
         }
-        ReturnType::Type(_, ref t) => {
-            (quote!(Ok(#func_name #inputs)), quote!(::anyhow::Result<#t>))
-        }
+        ReturnType::Type(_, ref t) => (quote!(Ok(#func_name #inputs)), quote!(::eyre::Result<#t>)),
         _ => abort!(func.sig, "AOC part cannot return ()"),
     };
     quote! {

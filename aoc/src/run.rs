@@ -1,11 +1,10 @@
-use anyhow::bail;
 use chrono::{Datelike, Duration};
 use clap::Parser;
 use itertools::Itertools;
 
 #[derive(Parser)]
 #[clap(version, author)]
-/// Advent of Code 2021
+/// Advent of Code
 struct Opts {
     #[clap(short, long)]
     /// Run all days
@@ -42,16 +41,16 @@ fn pretty_duration(duration: Duration) -> String {
     }
 }
 
-pub fn run<F>(register: F) -> anyhow::Result<()>
+pub fn run<F>(register: F) -> eyre::Result<()>
 where
     F: Fn(),
 {
     let opts = Opts::parse();
     if opts.day.is_some() && opts.all {
-        bail!("--all and --day are not compatible");
+        eyre::bail!("--all and --day are not compatible");
     }
     if opts.input.is_some() && opts.all {
-        bail!("--all and --input are not compatible");
+        eyre::bail!("--all and --input are not compatible");
     }
     unsafe {
         super::input::OVERRIDE_INPUT = opts.input;

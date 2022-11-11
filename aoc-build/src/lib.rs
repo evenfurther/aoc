@@ -3,7 +3,7 @@ use std::fs::{self, File};
 use std::io::{BufRead, BufReader};
 use syn::parse_quote;
 
-fn output(content: &str) -> anyhow::Result<()> {
+fn output(content: &str) -> eyre::Result<()> {
     fs::write(
         format!("{}/register.rs", std::env::var("OUT_DIR")?),
         content,
@@ -11,7 +11,7 @@ fn output(content: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn build() -> anyhow::Result<()> {
+pub fn build() -> eyre::Result<()> {
     let attr_re = Regex::new(r#"#\[aoc\(day(\d+),\s*part(\d+),?(.*)\)\]"#).unwrap();
     let version_re = Regex::new(r"^\w+$").unwrap();
     let mut refs = Vec::new();
