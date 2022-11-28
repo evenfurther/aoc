@@ -58,10 +58,9 @@ where
 
 pub fn parse_input_bytes(input: &[u8], sep: Option<u8>) -> Result<Vec<&[u8]>, Error> {
     let sep = sep.unwrap_or(b'\n');
-    let input = if input[input.len() - 1] == sep {
-        &input[..input.len() - 1]
-    } else {
-        input
-    };
-    Ok(input.split(|&b| b == sep).collect())
+    Ok(input
+        .strip_suffix(&[sep])
+        .unwrap_or(input)
+        .split(|&b| b == sep)
+        .collect())
 }
