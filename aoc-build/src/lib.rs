@@ -34,7 +34,7 @@ pub fn build() -> eyre::Result<()> {
                     .map(|s| s.trim())
                     .find(|s| version_re.is_match(s));
                 let (version, extension): (syn::Expr, &str) = match version {
-                    Some(v) => (parse_quote!(Some(String::from(#v)), v), v),
+                    Some(v) => (parse_quote!(Some(String::from(#v))), v),
                     None => (parse_quote!(None), "none"),
                 };
                 let mod_name: syn::Ident = syn::parse_str(

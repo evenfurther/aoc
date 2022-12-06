@@ -1,25 +1,7 @@
-use std::{str::FromStr, string::FromUtf8Error};
+use crate::error::Error;
+use std::str::FromStr;
 
 pub static mut OVERRIDE_INPUT: Option<String> = None;
-
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("IO error")]
-    Io(#[from] std::io::Error),
-    #[error("malformed UTF8 string")]
-    Utf8(#[from] FromUtf8Error),
-    #[error("fatal error")]
-    Other(#[from] Box<dyn std::error::Error + Send + Sync + 'static>),
-}
-
-impl Error {
-    pub fn from_error<E>(e: E) -> Self
-    where
-        E: std::error::Error + Send + Sync + 'static,
-    {
-        Error::Other(Box::new(e))
-    }
-}
 
 pub fn input_bytes(day: usize) -> Result<Vec<u8>, Error> {
     match { unsafe { &OVERRIDE_INPUT } } {

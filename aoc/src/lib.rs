@@ -1,5 +1,6 @@
 pub use aoc_derive::*;
 
+pub mod error;
 pub mod input;
 mod run;
 mod runners;

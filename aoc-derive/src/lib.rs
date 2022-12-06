@@ -86,7 +86,7 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
             "runner_{}_{}_{}",
             day,
             part,
-            version.unwrap_or_else(|| String::from("none"))
+            version.clone().unwrap_or_else(|| String::from("none"))
         ),
         func.sig.ident.span(),
     );
@@ -138,6 +138,18 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
     let (call, ty) = match func.sig.output {
         ReturnType::Type(_, ref t) if t.to_token_stream().to_string().contains("Result < ") => {
             (quote!(#func_name #inputs), quote!(#t))
+        }
+        ReturnType::Type(_, ref t) if t.to_token_stream().to_string().contains("Option <") => {
+            let no_option = t
+                .to_token_stream()
+                .into_iter()
+                .skip(1)
+                .collect::<proc_macro2::TokenStream>();
+            let version = version.map_or(quote!(None), |v| quote!(Some(#v)));
+            (
+                quote!(Ok(#func_name #inputs .ok_or(::aoc::error::Error::NoOutput(#day, #part, #version))?)),
+                quote!(::eyre::Result #no_option),
+            )
         }
         ReturnType::Type(_, ref t) => (quote!(Ok(#func_name #inputs)), quote!(::eyre::Result<#t>)),
         _ => abort!(func.sig, "AOC part cannot return ()"),
