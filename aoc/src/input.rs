@@ -23,7 +23,7 @@ pub fn input_string(day: usize) -> Result<String, Error> {
 pub fn parse_input<T>(input: &str, sep: Option<char>) -> Result<Vec<T>, Error>
 where
     T: FromStr,
-    <T as FromStr>::Err: std::error::Error + Send + Sync + 'static,
+    <T as FromStr>::Err: Into<eyre::Report>,
 {
     match sep {
         Some(sep) => Ok(input

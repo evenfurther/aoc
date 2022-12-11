@@ -7,7 +7,7 @@ pub enum Error {
     #[error("malformed UTF8 string in input")]
     Utf8(#[from] FromUtf8Error),
     #[error(transparent)]
-    Other(#[from] Box<dyn std::error::Error + Send + Sync + 'static>),
+    Other(#[from] eyre::Report),
     #[error("no output for day {0} part {1}{}", .2.map(|v| format!(r#" (variant "{v}""#)).unwrap_or_default())]
     NoOutput(usize, usize, Option<&'static str>),
 }
@@ -15,8 +15,8 @@ pub enum Error {
 impl Error {
     pub fn from_error<E>(e: E) -> Self
     where
-        E: std::error::Error + Send + Sync + 'static,
+        E: Into<eyre::Report>,
     {
-        Error::Other(Box::new(e))
+        Error::Other(e.into())
     }
 }
