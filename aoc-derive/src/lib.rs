@@ -3,7 +3,7 @@ use proc_macro_error::{abort, proc_macro_error};
 use quote::{quote, ToTokens};
 use syn::{
     parse::{Parse, ParseStream},
-    parse_macro_input, FnArg, Ident, ItemFn, LitChar, PatType, ReturnType, Token,
+    parse_macro_input, FnArg, Ident, ItemFn, LitChar, LitStr, PatType, ReturnType, Token,
 };
 
 #[derive(Default)]
@@ -11,7 +11,7 @@ struct AocEntry {
     day: usize,
     part: usize,
     version: Option<String>,
-    separator: Option<char>,
+    separator: Option<String>,
 }
 
 impl Parse for AocEntry {
@@ -23,7 +23,7 @@ impl Parse for AocEntry {
                 _ => {
                     return Err(syn::Error::new(
                         day.span(),
-                        format!("cannot parse day (between 1 and 25) {}", d),
+                        format!("cannot parse day (between 1 and 25) {d}"),
                     ))
                 }
             },
@@ -42,7 +42,7 @@ impl Parse for AocEntry {
                 _ => {
                     return Err(syn::Error::new(
                         part.span(),
-                        format!("cannot parse part (1 or 2) {}", d),
+                        format!("cannot parse part (1 or 2) {d}"),
                     ))
                 }
             },
@@ -63,7 +63,15 @@ impl Parse for AocEntry {
             match input.parse::<Ident>()?.to_string().as_str() {
                 "separator" => {
                     <Token![=]>::parse(input)?;
-                    entry.separator = Some(LitChar::parse(input)?.value());
+                    let lookahead = input.lookahead1();
+                    if lookahead.peek(LitChar) {
+                        entry.separator =
+                            Some(input.parse::<LitChar>().unwrap().value().to_string());
+                    } else if lookahead.peek(LitStr) {
+                        entry.separator = Some(input.parse::<LitStr>().unwrap().value());
+                    } else {
+                        lookahead.error();
+                    }
                 }
                 i => entry.version = Some(i.to_owned()),
             }

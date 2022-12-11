@@ -20,7 +20,7 @@ pub fn input_string(day: usize) -> Result<String, Error> {
 
 /// Parse input as lines() if `sep` is absent, or as a single line
 /// if `sep` is present.
-pub fn parse_input<T>(input: &str, sep: Option<char>) -> Result<Vec<T>, Error>
+pub fn parse_input<T>(input: &str, sep: Option<&str>) -> Result<Vec<T>, Error>
 where
     T: FromStr,
     <T as FromStr>::Err: Into<eyre::Report>,
