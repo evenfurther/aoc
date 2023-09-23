@@ -111,7 +111,7 @@ dependencies = [
  "eyre",
  "prettyplease",
  "regex",
- "syn 1.0.109",
+ "syn 2.0.37",
 ]
 
 [[package]]
@@ -121,7 +121,7 @@ dependencies = [
  "proc-macro-error",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.37",
  "trybuild",
 ]
 
