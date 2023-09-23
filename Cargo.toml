@@ -1,4 +1,3 @@
 [workspace]
 members = ["aoc", "aoc-derive", "aoc-build"]
 resolver = "2"
-
