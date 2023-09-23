@@ -81,7 +81,7 @@ fn d1p1ss_vec(input: Vec<S>) -> u8 {
 
 #[aoc(day3, part1, s_mut)]
 fn d1p1ss_mut(input: &mut [S]) -> u8 {
-    input.iter().map(|s| s.u).sum()
+    input.iter_mut().map(|s| s.u).sum()
 }
 
 #[aoc(day3, part1, separator = ',', s_commas)]

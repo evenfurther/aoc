@@ -17,6 +17,6 @@ where
 {
     let mut map = RUNNERS.lock().unwrap();
     map.entry((day, part))
-        .or_insert_with(Vec::new)
+        .or_default()
         .push((version, Box::new(|| func().map(|r| r.to_string()))));
 }

@@ -98,9 +98,10 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
         ),
         func.sig.ident.span(),
     );
-    let sep = match aoc_entry.separator {
-        Some(sep) => quote!(Some(#sep)),
-        None => quote!(None),
+    let sep = if let Some(sep) = aoc_entry.separator {
+        quote!(Some(#sep))
+    } else {
+        quote!(None)
     };
     let inputs = match func.sig.inputs.first() {
         Some(FnArg::Typed(PatType { ty, .. }))

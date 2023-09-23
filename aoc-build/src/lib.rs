@@ -12,7 +12,7 @@ fn output(content: &str) -> eyre::Result<()> {
 }
 
 pub fn build() -> eyre::Result<()> {
-    let attr_re = Regex::new(r#"#\[aoc\(day(\d+),\s*part(\d+),?(.*)\)\]"#).unwrap();
+    let attr_re = Regex::new(r"#\[aoc\(day(\d+),\s*part(\d+),?(.*)\)\]").unwrap();
     let version_re = Regex::new(r"^\w+$").unwrap();
     let mut refs = Vec::new();
     for file in fs::read_dir("src")? {
