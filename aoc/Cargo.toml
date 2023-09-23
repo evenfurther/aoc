@@ -15,4 +15,5 @@ lazy_static = "1.4.0"
 thiserror = "1.0.48"
 
 [dev-dependencies]
+insta = "1.32.0"
 serial_test = "2.0.0"
