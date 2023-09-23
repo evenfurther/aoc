@@ -1,15 +1,15 @@
 [package]
-name = "aoc2015"
+name = "dummy-year"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0/MIT"
 
 [dependencies]
-aoc = { path = "../.." }
+aoc = { path = "../aoc" }
 bytecount = "0.6.3"
 eyre = "0.6.8"
 
 [build-dependencies]
-aoc-build = { path = "../../../aoc-build" }
+aoc-build = { path = "../aoc-build" }
 
 [features]

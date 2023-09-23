@@ -127,16 +127,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "aoc2015"
-version = "0.1.0"
-dependencies = [
- "aoc",
- "aoc-build",
- "bytecount",
- "eyre",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -315,6 +305,16 @@ dependencies = [
  "lock_api",
  "once_cell",
  "parking_lot_core",
+]
+
+[[package]]
+name = "dummy-year"
+version = "0.1.0"
+dependencies = [
+ "aoc",
+ "aoc-build",
+ "bytecount",
+ "eyre",
 ]
 
 [[package]]
