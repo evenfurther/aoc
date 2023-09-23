@@ -5,7 +5,7 @@ fn run_with(args: &[&str]) -> String {
     let output = Command::new("cargo")
         .args(["run", "--"])
         .args(args)
-        .current_dir("tests/dummy-year")
+        .current_dir("../dummy-year")
         .output()
         .unwrap();
     String::from_utf8(output.stdout).unwrap()
