@@ -1,3 +1,5 @@
+#![allow(clippy::module_name_repetitions)]
+
 use crate::error::Error;
 use std::str::FromStr;
 
@@ -10,7 +12,7 @@ pub fn input_bytes(day: usize) -> Result<Vec<u8>, Error> {
             s.push(b'\n');
             s
         })),
-        None => Ok(std::fs::read(format!("input/day{}.txt", day))?),
+        None => Ok(std::fs::read(format!("input/day{day}.txt"))?),
     }
 }
 

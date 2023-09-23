@@ -1,3 +1,10 @@
+#![deny(clippy::pedantic)]
+#![allow(
+    clippy::case_sensitive_file_extension_comparisons,
+    clippy::missing_errors_doc,
+    clippy::missing_panics_doc
+)]
+
 use regex::Regex;
 use std::fs::{self, File};
 use std::io::{BufRead, BufReader};
@@ -31,7 +38,7 @@ pub fn build() -> eyre::Result<()> {
                 let part = m[2].parse::<usize>()?;
                 let version = m[3]
                     .split(',')
-                    .map(|s| s.trim())
+                    .map(str::trim)
                     .find(|s| version_re.is_match(s));
                 let (version, extension): (syn::Expr, &str) = match version {
                     Some(v) => (parse_quote!(Some(String::from(#v))), v),
