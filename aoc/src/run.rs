@@ -19,6 +19,10 @@ struct Opts {
     timing: bool,
 
     #[clap(short, long)]
+    /// Skip running any alternate version
+    main_only: bool,
+
+    #[clap(short, long)]
     /// Use alternate input (file or string)
     input: Option<String>,
 }
@@ -46,7 +50,7 @@ pub fn run<F>(register: F) -> eyre::Result<()>
 where
     F: Fn(),
 {
-    color_eyre::install().unwrap();
+    color_eyre::install()?;
     let opts = Opts::parse();
     if opts.day.is_some() && opts.all {
         eyre::bail!("--all and --day are not compatible");
@@ -64,6 +68,9 @@ where
     for (day, part) in keys {
         if day == current_day || opts.all {
             for (version, runner) in runners.remove(&(day, part)).unwrap() {
+                if opts.main_only && version.is_some() {
+                    continue;
+                }
                 let before = chrono::Utc::now();
                 let result = runner();
                 let after = chrono::Utc::now();
