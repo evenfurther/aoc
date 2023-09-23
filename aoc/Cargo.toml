@@ -15,4 +15,4 @@ lazy_static = "1.4.0"
 thiserror = "1.0.48"
 
 [dev-dependencies]
-serial_test = "0.9.0"
+serial_test = "0.10.0"
