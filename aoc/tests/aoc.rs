@@ -40,18 +40,18 @@ fn d3p1s(input: &str) -> String {
 #[aoc(day3, part1, vec_str)]
 fn d3p1svec(mut input: Vec<&str>) -> String {
     input.sort_unstable();
-    format!("{:?}", input)
+    format!("{input:?}")
 }
 
 #[aoc(day3, part1, ref_str)]
 fn d3p1sref(input: &[&str]) -> String {
-    format!("{:?}", input)
+    format!("{input:?}")
 }
 
 #[aoc(day3, part1, mut_str)]
 fn d3p1smut(input: &mut [&str]) -> String {
     input.sort_unstable();
-    format!("{:?}", input)
+    format!("{input:?}")
 }
 
 #[aoc(day3, part1, bytes)]
