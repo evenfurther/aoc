@@ -69,7 +69,7 @@ where
                 let after = chrono::Utc::now();
                 let version = version
                     .clone()
-                    .map_or_else(String::new, |v| format!(" — {}", v));
+                    .map_or_else(String::new, |v| format!(" — {v}"));
                 let elapsed = if opts.timing {
                     format!(" ({})", pretty_duration(after - before))
                 } else {
