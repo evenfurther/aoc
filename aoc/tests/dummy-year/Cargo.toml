@@ -8,19 +8,7 @@ edition = "2021"
 [dependencies]
 aoc = { path = "../.." }
 bytecount = "0.6.3"
-cached = "0.40.0"
-chrono = "0.4.23"
-color-eyre = "0.6.2"
-divisors = "0.2.1"
 eyre = "0.6.8"
-itertools = "0.10.5"
-json = "0.12.4"
-lazy_static = "1.4.0"
-md5 = "0.7.0"
-modulo-n-tools = "0.2.0"
-pathfinding = "4.1.1"
-regex = "1.7.0"
-thiserror = "1.0.37"
 
 [build-dependencies]
 aoc-build = { path = "../../../aoc-build" }
