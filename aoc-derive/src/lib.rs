@@ -1,3 +1,5 @@
+#![deny(clippy::pedantic)]
+
 use proc_macro::TokenStream;
 use proc_macro_error::{abort, proc_macro_error};
 use quote::{quote, ToTokens};
@@ -161,7 +163,7 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
             )
         }
         ReturnType::Type(_, ref t) => (quote!(Ok(#func_name #inputs)), quote!(::eyre::Result<#t>)),
-        _ => abort!(func.sig, "AOC part cannot return ()"),
+        ReturnType::Default => abort!(func.sig, "AOC part cannot return ()"),
     };
     quote! {
         #func

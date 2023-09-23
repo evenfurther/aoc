@@ -2,6 +2,7 @@
 name = "aoc-derive"
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0/MIT"
 
 [lib]
 name = "aoc_derive"
@@ -9,9 +10,9 @@ proc_macro = true
 
 [dependencies]
 proc-macro-error = "1.0.4"
-proc-macro2 = "1.0.47"
-quote = "1.0.21"
-syn = { version = "1.0.102", features = ["full", "parsing"] }
+proc-macro2 = "1.0.67"
+quote = "1.0.33"
+syn = { version = "1.0.109", features = ["full", "parsing"] }
 
 [dev-dependencies]
-trybuild = "1.0.71"
+trybuild = "1.0.85"

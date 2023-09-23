@@ -23,6 +23,7 @@ struct Opts {
     input: Option<String>,
 }
 
+#[allow(clippy::cast_precision_loss)]
 fn pretty_duration(duration: Duration) -> String {
     if duration < Duration::microseconds(1) {
         format!("{} ns", duration.num_nanoseconds().unwrap())
@@ -59,7 +60,7 @@ where
     let current_day = opts.day.unwrap_or(chrono::Utc::now().day() as usize);
     register();
     let mut runners = super::runners::RUNNERS.lock().unwrap();
-    let keys = runners.keys().cloned().collect::<Vec<_>>();
+    let keys = runners.keys().copied().collect::<Vec<_>>();
     for (day, part) in keys {
         if day == current_day || opts.all {
             for (version, runner) in runners.remove(&(day, part)).unwrap() {
@@ -68,20 +69,19 @@ where
                 let after = chrono::Utc::now();
                 let version = version
                     .clone()
-                    .map(|v| format!(" — {}", v))
-                    .unwrap_or_else(String::new);
+                    .map_or_else(String::new, |v| format!(" — {}", v));
                 let elapsed = if opts.timing {
                     format!(" ({})", pretty_duration(after - before))
                 } else {
                     String::new()
                 };
-                let header = format!("Day {} - part {}{}: ", day, part, version);
+                let header = format!("Day {day} - part {part}{version}: ");
                 let sep = format!("\n{}", " ".repeat(header.len()));
                 let result = match result {
                     Ok(e) => e.lines().join(&sep),
-                    Err(e) => format!("<error: {:?}>", e),
+                    Err(e) => format!("<error: {e:?}>"),
                 };
-                println!("{}{}{}", header, result, elapsed);
+                println!("{header}{result}{elapsed}");
             }
         }
     }
