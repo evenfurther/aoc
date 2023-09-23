@@ -8,6 +8,6 @@ license = "Apache-2.0/MIT"
 
 [dependencies]
 eyre = "0.6.8"
-prettyplease = "0.1.21"
-regex = "1.6.0"
-syn = "1.0.102"
+prettyplease = "0.1.25"
+regex = "1.9.5"
+syn = "1.0.109"

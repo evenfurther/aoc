@@ -6,13 +6,13 @@ license = "Apache-2.0/MIT"
 
 [dependencies]
 aoc-derive = { path = "../aoc-derive" }
-chrono = "0.4.22"
-clap = { version = "4.0.15", features = ["derive"] }
+chrono = "0.4.31"
+clap = { version = "4.4.4", features = ["derive"] }
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 itertools = "0.10.5"
 lazy_static = "1.4.0"
-thiserror = "1.0.37"
+thiserror = "1.0.48"
 
 [dev-dependencies]
 serial_test = "0.9.0"
