@@ -2,8 +2,7 @@
 name = "aoc2015"
 version = "0.1.0"
 edition = "2021"
-
-[workspace]
+license = "Apache-2.0/MIT"
 
 [dependencies]
 aoc = { path = "../.." }
