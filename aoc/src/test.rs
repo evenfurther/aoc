@@ -4,14 +4,6 @@ use std::process::Command;
 
 const ENV_VAR: &str = "RECORD_RESULTS";
 
-fn run_with(args: &[&str]) -> eyre::Result<String> {
-    let output = Command::new("cargo")
-        .args(["run", "--release", "--", "-a"])
-        .args(args)
-        .output()?;
-    Ok(String::from_utf8(output.stdout)?)
-}
-
 fn equal_content<P: AsRef<Path>>(actual: &str, expected: P, show_diff: bool) -> eyre::Result<bool> {
     let expected_content = std::fs::read_to_string(expected.as_ref()).context(format!(
         "cannot read {}",
@@ -41,12 +33,12 @@ fn equal_content<P: AsRef<Path>>(actual: &str, expected: P, show_diff: bool) -> 
     }
 }
 
-pub fn check_results<P: AsRef<Path>>(expected: P, main_only: bool) -> eyre::Result<bool> {
-    let actual = if main_only {
-        run_with(&["-m"])?
-    } else {
-        run_with(&[])?
-    };
+pub fn check_results<F: Fn(), P: AsRef<Path>>(
+    register: F,
+    expected: P,
+    main_only: bool,
+) -> eyre::Result<bool> {
+    let actual = super::run::run_tests(register, None, false, main_only)?;
     let update = std::env::var(ENV_VAR).is_ok();
     if update {
         if !matches!(equal_content(&actual, &expected, false), Ok(true)) {

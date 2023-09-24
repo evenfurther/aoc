@@ -65,21 +65,3 @@ fn all_days_main() {
     Day 2 - part 2: 3842356
     "###);
 }
-
-#[test]
-#[serial]
-fn check_expected_main() {
-    let dir = std::env::current_dir().unwrap();
-    std::env::set_current_dir("../dummy-year").unwrap();
-    assert!(aoc::test::check_results("expected.txt", true).unwrap());
-    std::env::set_current_dir(dir).unwrap();
-}
-
-#[test]
-#[serial]
-fn check_expected() {
-    let dir = std::env::current_dir().unwrap();
-    std::env::set_current_dir("../dummy-year").unwrap();
-    assert!(aoc::test::check_results("expected-all.txt", false).unwrap());
-    std::env::set_current_dir(dir).unwrap();
-}

@@ -7,7 +7,7 @@ fn part1(input: &str) -> usize {
 
 #[aoc(day1, part1, str_slice)]
 fn part1_string_slice(input: &[&str]) -> usize {
-    input.iter().cloned().map(part1).sum()
+    input.iter().copied().map(part1).sum()
 }
 
 #[aoc(day1, part2)]
