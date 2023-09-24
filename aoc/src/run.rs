@@ -1,6 +1,6 @@
 use chrono::{Datelike, Duration};
 use clap::Parser;
-use itertools::Itertools;
+use std::fmt::Write;
 
 #[derive(Parser)]
 #[clap(version, author)]
@@ -46,6 +46,44 @@ fn pretty_duration(duration: Duration) -> String {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
+pub fn run_tests<F>(
+    register: F,
+    single_day: Option<usize>,
+    main_only: bool,
+    timings: bool,
+) -> eyre::Result<String>
+where
+    F: Fn(),
+{
+    register();
+    let mut results = String::new();
+    let mut runners = super::runners::RUNNERS.lock().unwrap();
+    let keys = runners.keys().copied().collect::<Vec<_>>();
+    for (day, part) in keys {
+        if single_day.map_or(true, |d| d == day) {
+            for (version, runner) in runners.remove(&(day, part)).unwrap() {
+                if main_only && version.is_some() {
+                    continue;
+                }
+                write!(&mut results, "Day {day} - part {part}")?;
+                if let Some(version) = version {
+                    write!(&mut results, " — {version}")?;
+                }
+                let before = chrono::Utc::now();
+                let result = runner()?;
+                let after = chrono::Utc::now();
+                write!(&mut results, ": {result}")?;
+                if timings {
+                    write!(&mut results, " ({})", pretty_duration(after - before))?;
+                }
+                writeln!(&mut results)?;
+            }
+        }
+    }
+    Ok(results)
+}
+
 pub fn run<F>(register: F) -> eyre::Result<()>
 where
     F: Fn(),
@@ -62,35 +100,14 @@ where
         super::input::OVERRIDE_INPUT = opts.input;
     }
     let current_day = opts.day.unwrap_or(chrono::Utc::now().day() as usize);
-    register();
-    let mut runners = super::runners::RUNNERS.lock().unwrap();
-    let keys = runners.keys().copied().collect::<Vec<_>>();
-    for (day, part) in keys {
-        if day == current_day || opts.all {
-            for (version, runner) in runners.remove(&(day, part)).unwrap() {
-                if opts.main_only && version.is_some() {
-                    continue;
-                }
-                let before = chrono::Utc::now();
-                let result = runner();
-                let after = chrono::Utc::now();
-                let version = version
-                    .clone()
-                    .map_or_else(String::new, |v| format!(" — {v}"));
-                let elapsed = if opts.timing {
-                    format!(" ({})", pretty_duration(after - before))
-                } else {
-                    String::new()
-                };
-                let header = format!("Day {day} - part {part}{version}: ");
-                let sep = format!("\n{}", " ".repeat(header.len()));
-                let result = match result {
-                    Ok(e) => e.lines().join(&sep),
-                    Err(e) => format!("<error: {e:?}>"),
-                };
-                println!("{header}{result}{elapsed}");
-            }
-        }
-    }
+    println!(
+        "{}",
+        run_tests(
+            register,
+            (!opts.all).then_some(current_day),
+            opts.main_only,
+            opts.timing
+        )?
+    );
     Ok(())
 }

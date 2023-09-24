@@ -1,7 +1,0 @@
-Day 1 - part 1: 232
-Day 1 - part 1 — str_slice: 232
-Day 1 - part 2: 1783
-Day 1 - part 2 — result: 1783
-Day 1 - part 2 — result_string: 1783
-Day 2 - part 1: 1606483
-Day 2 - part 2: 3842356
