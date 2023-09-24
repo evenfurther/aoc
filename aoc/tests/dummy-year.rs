@@ -37,7 +37,11 @@ fn day1_main() {
 fn day2() {
     insta::assert_snapshot!(run_with(&["-d", "2"]), @r###"
     Day 2 - part 1: 1606483
-    Day 2 - part 2: 3842356
+    Day 2 - part 2: 20x3x11
+                    15x27x5
+    Day 2 - part 2 — no_eol: 20x3x11
+                             15x27x5
+
     "###);
 }
 
@@ -51,7 +55,11 @@ fn all_days() {
     Day 1 - part 2 — result: 1783
     Day 1 - part 2 — result_string: 1783
     Day 2 - part 1: 1606483
-    Day 2 - part 2: 3842356
+    Day 2 - part 2: 20x3x11
+                    15x27x5
+    Day 2 - part 2 — no_eol: 20x3x11
+                             15x27x5
+
     "###);
 }
 
@@ -62,6 +70,8 @@ fn all_days_main() {
     Day 1 - part 1: 232
     Day 1 - part 2: 1783
     Day 2 - part 1: 1606483
-    Day 2 - part 2: 3842356
+    Day 2 - part 2: 20x3x11
+                    15x27x5
+
     "###);
 }
