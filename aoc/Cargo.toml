@@ -12,6 +12,7 @@ color-eyre = "0.6.2"
 eyre = "0.6.8"
 itertools = "0.11.0"
 lazy_static = "1.4.0"
+mktemp = "0.5.1"
 thiserror = "1.0.48"
 
 [dev-dependencies]
