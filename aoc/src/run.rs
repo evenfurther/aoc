@@ -66,6 +66,7 @@ where
                 if main_only && version.is_some() {
                     continue;
                 }
+                let results_start = results.chars().count();
                 write!(&mut results, "Day {day} - part {part}")?;
                 if let Some(version) = version {
                     write!(&mut results, " — {version}")?;
@@ -73,10 +74,12 @@ where
                 let before = chrono::Utc::now();
                 let result = runner()?;
                 let after = chrono::Utc::now();
-                write!(&mut results, ": {result}")?;
                 if timings {
                     write!(&mut results, " ({})", pretty_duration(after - before))?;
                 }
+                write!(&mut results, ": ")?;
+                let sep = format!("\n{}", " ".repeat(results.chars().count() - results_start));
+                write!(&mut results, "{}", result.trim().replace('\n', &sep))?;
                 writeln!(&mut results)?;
             }
         }

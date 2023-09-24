@@ -25,14 +25,11 @@ fn part1(input: &str) -> u32 {
 }
 
 #[aoc(day2, part2)]
-fn part2(input: &str) -> u32 {
-    generator(input)
-        .unwrap()
-        .iter()
-        .map(|v| {
-            let mut v = v.clone();
-            v.sort_unstable();
-            (v[0] + v[1]) * 2 + v[0] * v[1] * v[2]
-        })
-        .sum()
+fn part2(input: &[&str]) -> String {
+    format!("{}\n{}\n", input[0], input[1])
+}
+
+#[aoc(day2, part2, no_eol)]
+fn part2_no_eol(input: &[&str]) -> String {
+    format!("{}\n{}", input[0], input[1])
 }
