@@ -9,5 +9,5 @@ license = "Apache-2.0/MIT"
 [dependencies]
 eyre = "0.6.8"
 prettyplease = "0.2.15"
-regex = "1.9.5"
+regex = "1.9.6"
 syn = "2.0.37"
