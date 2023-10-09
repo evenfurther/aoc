@@ -16,5 +16,5 @@ mktemp = "0.5.1"
 thiserror = "1.0.49"
 
 [dev-dependencies]
-insta = "1.33.0"
+insta = "1.34.0"
 serial_test = { version = "2.0.0", default-features = false }
