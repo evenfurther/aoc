@@ -7,7 +7,7 @@ license = "Apache-2.0/MIT"
 [dependencies]
 aoc-derive = { path = "../aoc-derive" }
 chrono = "0.4.31"
-clap = { version = "4.4.6", features = ["derive"] }
+clap = { version = "4.4.7", features = ["derive"] }
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 itertools = "0.11.0"
