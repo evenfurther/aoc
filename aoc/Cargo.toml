@@ -18,3 +18,8 @@ thiserror = "1.0.50"
 [dev-dependencies]
 insta = "1.34.0"
 serial_test = { version = "2.0.0", default-features = false }
+
+[lints.clippy]
+pedantic = "deny"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"

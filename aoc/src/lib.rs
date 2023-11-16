@@ -1,6 +1,3 @@
-#![deny(clippy::pedantic)]
-#![allow(clippy::missing_errors_doc, clippy::missing_panics_doc)]
-
 pub use aoc_derive::*;
 
 pub mod error;

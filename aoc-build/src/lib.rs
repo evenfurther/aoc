@@ -1,10 +1,3 @@
-#![deny(clippy::pedantic)]
-#![allow(
-    clippy::case_sensitive_file_extension_comparisons,
-    clippy::missing_errors_doc,
-    clippy::missing_panics_doc
-)]
-
 use regex::Regex;
 use std::fs::{self, File};
 use std::io::{BufRead, BufReader};
