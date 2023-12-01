@@ -15,6 +15,10 @@ struct Opts {
     day: Option<usize>,
 
     #[clap(short, long)]
+    /// Restrict running to one part (1 or 2)
+    part: Option<usize>,
+
+    #[clap(short, long)]
     /// Show timing information
     timing: bool,
 
@@ -50,6 +54,7 @@ fn pretty_duration(duration: Duration) -> String {
 pub fn run_tests<F>(
     register: F,
     single_day: Option<usize>,
+    single_part: Option<usize>,
     main_only: bool,
     timings: bool,
 ) -> eyre::Result<String>
@@ -61,6 +66,9 @@ where
     let mut runners = super::runners::RUNNERS.lock().unwrap();
     let keys = runners.keys().copied().collect::<Vec<_>>();
     for (day, part) in keys {
+        if single_part.is_some_and(|p| p != part) {
+            continue;
+        }
         if single_day.map_or(true, |d| d == day) {
             for (version, runner) in runners.remove(&(day, part)).unwrap() {
                 if main_only && version.is_some() {
@@ -99,6 +107,9 @@ where
     if opts.input.is_some() && opts.all {
         eyre::bail!("--all and --input are not compatible");
     }
+    if opts.part.is_some_and(|p| p < 1 || p > 2) {
+        eyre::bail!("--part accepts argument must be 1 or 2");
+    }
     unsafe {
         super::input::OVERRIDE_INPUT = opts.input;
     }
@@ -108,6 +119,7 @@ where
         run_tests(
             register,
             (!opts.all).then_some(current_day),
+            opts.part,
             opts.main_only,
             opts.timing
         )?

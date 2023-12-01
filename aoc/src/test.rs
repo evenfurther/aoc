@@ -38,7 +38,7 @@ pub fn check_results<F: Fn(), P: AsRef<Path>>(
     expected: P,
     main_only: bool,
 ) -> eyre::Result<bool> {
-    let actual = super::run::run_tests(register, None, false, main_only)?;
+    let actual = super::run::run_tests(register, None, None, false, main_only)?;
     let update = std::env::var(ENV_VAR).is_ok();
     if update {
         if !matches!(equal_content(&actual, &expected, false), Ok(true)) {
