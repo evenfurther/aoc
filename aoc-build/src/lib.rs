@@ -61,6 +61,7 @@ pub fn build() -> eyre::Result<()> {
         }
     }
     let register: syn::File = parse_quote! {
+        #[allow(clippy::module_name_repetitions)]
         pub fn register_runners() {
             #(#refs)*
         }
