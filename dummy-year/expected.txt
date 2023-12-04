@@ -8,3 +8,4 @@ Day 2 - part 2: 20x3x11
                 15x27x5
 Day 2 - part 2 — no_eol: 20x3x11
                          15x27x5
+Day 3 - part 1: 8134
