@@ -59,6 +59,7 @@ fn all_days() {
                     15x27x5
     Day 2 - part 2 — no_eol: 20x3x11
                              15x27x5
+    Day 3 - part 1: 8134
 
     "###);
 }
@@ -72,6 +73,7 @@ fn all_days_main() {
     Day 2 - part 1: 1606483
     Day 2 - part 2: 20x3x11
                     15x27x5
+    Day 3 - part 1: 8134
 
     "###);
 }
