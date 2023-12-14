@@ -7,7 +7,7 @@ license = "Apache-2.0/MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-eyre = "0.6.10"
+eyre = "0.6.11"
 prettyplease = "0.2.15"
 regex = "1.10.2"
 syn = "2.0.40"
