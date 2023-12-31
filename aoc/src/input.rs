@@ -6,7 +6,7 @@ use std::str::FromStr;
 pub static mut OVERRIDE_INPUT: Option<String> = None;
 
 pub fn input_bytes(day: usize) -> Result<Vec<u8>, Error> {
-    match { unsafe { &OVERRIDE_INPUT } } {
+    match unsafe { &OVERRIDE_INPUT } {
         Some(s) => Ok(std::fs::read(s).unwrap_or_else(|_| {
             let mut s = s.as_bytes().to_vec();
             s.push(b'\n');
@@ -20,7 +20,7 @@ pub fn input_string(day: usize) -> Result<String, Error> {
     Ok(String::from_utf8(input_bytes(day)?)?)
 }
 
-/// Parse input as lines() if `sep` is absent, or as a single line
+/// Parse input as `lines()` if `sep` is absent, or as a single line
 /// if `sep` is present.
 pub fn parse_input<T>(input: &str, sep: Option<&str>) -> Result<Vec<T>, Error>
 where
