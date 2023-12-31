@@ -107,7 +107,7 @@ where
     if opts.input.is_some() && opts.all {
         eyre::bail!("--all and --input are not compatible");
     }
-    if opts.part.is_some_and(|p| p < 1 || p > 2) {
+    if opts.part.is_some_and(|p| !(1..=2).contains(&p)) {
         eyre::bail!("--part accepts argument must be 1 or 2");
     }
     unsafe {
