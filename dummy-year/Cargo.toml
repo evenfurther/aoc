@@ -7,7 +7,7 @@ license = "Apache-2.0/MIT"
 [dependencies]
 aoc = { path = "../aoc" }
 bytecount = "0.6.7"
-eyre = "0.6.11"
+eyre = "0.6.12"
 
 [build-dependencies]
 aoc-build = { path = "../aoc-build" }
