@@ -10,7 +10,7 @@ chrono = "0.4.38"
 clap = { version = "4.5.4", features = ["derive"] }
 color-eyre = "0.6.3"
 eyre = "0.6.12"
-itertools = "0.12.1"
+itertools = "0.13.0"
 lazy_static = "1.4.0"
 mktemp = "0.5.1"
 thiserror = "1.0.59"
