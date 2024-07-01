@@ -6,7 +6,7 @@ license = "Apache-2.0/MIT"
 
 [lib]
 name = "aoc_derive"
-proc_macro = true
+proc-macro = true
 
 [dependencies]
 proc-macro-error = "1.0.4"
