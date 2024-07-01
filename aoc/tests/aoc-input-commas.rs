@@ -103,26 +103,10 @@ impl FromStr for S {
 }
 
 #[test]
-fn inputs() {
+fn inputs_commas() {
     aoc::input::OVERRIDE_INPUT
-        .set(String::from("tests/input.txt"))
+        .set(String::from("tests/input-commas.txt"))
         .unwrap();
-    assert_eq!("123102030", runner_3_1_str().unwrap());
-    assert_eq!(
-        r#"["1", "10", "2", "20", "3", "30"]"#,
-        runner_3_1_vec_str().unwrap()
-    );
-    assert_eq!(
-        r#"["1", "2", "3", "10", "20", "30"]"#,
-        runner_3_1_ref_str().unwrap()
-    );
-    assert_eq!(
-        r#"["1", "10", "2", "20", "3", "30"]"#,
-        runner_3_1_mut_str().unwrap()
-    );
-    assert_eq!("123102030", runner_3_1_bytes().unwrap());
-    assert_eq!(66, runner_3_1_u32().unwrap());
-    assert_eq!(12, runner_3_1_s().unwrap());
-    assert_eq!(12, runner_3_1_s_vec().unwrap());
-    assert_eq!(12, runner_3_1_s_mut().unwrap());
+    assert_eq!(66, runner_3_1_u32_commas().unwrap());
+    assert_eq!(12, runner_3_1_s_commas().unwrap());
 }

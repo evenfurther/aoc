@@ -110,8 +110,8 @@ where
     if opts.part.is_some_and(|p| !(1..=2).contains(&p)) {
         eyre::bail!("--part accepts argument must be 1 or 2");
     }
-    unsafe {
-        super::input::OVERRIDE_INPUT = opts.input;
+    if let Some(input) = opts.input {
+        super::input::OVERRIDE_INPUT.set(input).unwrap();
     }
     let current_day = opts.day.unwrap_or(chrono::Utc::now().day() as usize);
     println!(

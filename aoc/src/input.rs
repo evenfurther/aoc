@@ -1,12 +1,12 @@
 #![allow(clippy::module_name_repetitions)]
 
 use crate::error::Error;
-use std::str::FromStr;
+use std::{str::FromStr, sync::OnceLock};
 
-pub static mut OVERRIDE_INPUT: Option<String> = None;
+pub static OVERRIDE_INPUT: OnceLock<String> = OnceLock::new();
 
 pub fn input_bytes(day: usize) -> Result<Vec<u8>, Error> {
-    match unsafe { &OVERRIDE_INPUT } {
+    match OVERRIDE_INPUT.get() {
         Some(s) => Ok(std::fs::read(s).unwrap_or_else(|_| {
             let mut s = s.as_bytes().to_vec();
             s.push(b'\n');
