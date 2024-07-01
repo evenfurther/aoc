@@ -17,4 +17,4 @@ thiserror = "1.0.59"
 
 [dev-dependencies]
 insta = "1.38.0"
-serial_test = { version = "2.0.0", default-features = false }
+serial_test = { version = "3.0.0", default-features = false }
