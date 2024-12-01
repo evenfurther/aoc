@@ -158,7 +158,7 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
                 .collect::<proc_macro2::TokenStream>();
             let version = version.map_or(quote!(None), |v| quote!(Some(#v)));
             (
-                quote!(Ok(#func_name #inputs .ok_or(::aoc::error::Error::NoOutput(#day, #part, #version))?)),
+                quote!(Ok(#func_name #inputs .ok_or(::aoc::error::Error::NoOutput { day: #day, part: #part, variant: #version })?)),
                 quote!(::eyre::Result #no_option),
             )
         }
