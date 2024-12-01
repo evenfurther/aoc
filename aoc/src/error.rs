@@ -8,8 +8,12 @@ pub enum Error {
     Utf8(#[from] FromUtf8Error),
     #[error(transparent)]
     Other(#[from] eyre::Report),
-    #[error("no output for day {0} part {1}{}", .2.map(|v| format!(r#" (variant "{v}""#)).unwrap_or_default())]
-    NoOutput(usize, usize, Option<&'static str>),
+    #[error("no output for day {day} part {part}{}", variant.map(|v| format!(r#" (variant "{v}""#)).unwrap_or_default())]
+    NoOutput {
+        day: usize,
+        part: usize,
+        variant: Option<&'static str>,
+    },
 }
 
 impl Error {
