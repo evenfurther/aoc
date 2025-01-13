@@ -69,7 +69,7 @@ where
         if single_part.is_some_and(|p| p != part) {
             continue;
         }
-        if single_day.map_or(true, |d| d == day) {
+        if single_day.is_none_or(|d| d == day) {
             for (version, runner) in runners.remove(&(day, part)).unwrap() {
                 if main_only && version.is_some() {
                     continue;
