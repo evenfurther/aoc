@@ -10,9 +10,9 @@ proc-macro = true
 
 [dependencies]
 proc-macro-error2 = "2.0.1"
-proc-macro2 = "1.0.88"
-quote = "1.0.37"
-syn = { version = "2.0.79", features = ["full", "parsing"] }
+proc-macro2 = "1.0.93"
+quote = "1.0.38"
+syn = { version = "2.0.96", features = ["full", "parsing"] }
 
 [dev-dependencies]
-trybuild = "1.0.100"
+trybuild = "1.0.101"
