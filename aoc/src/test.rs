@@ -1,4 +1,4 @@
-use eyre::{bail, Context};
+use eyre::{Context, bail};
 use std::path::Path;
 use std::process::Command;
 
