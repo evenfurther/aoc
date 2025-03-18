@@ -2,10 +2,11 @@
 
 use proc_macro::TokenStream;
 use proc_macro_error2::{abort, proc_macro_error};
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 use syn::{
+    FnArg, Ident, ItemFn, LitChar, LitStr, PatType, ReturnType, Token,
     parse::{Parse, ParseStream},
-    parse_macro_input, FnArg, Ident, ItemFn, LitChar, LitStr, PatType, ReturnType, Token,
+    parse_macro_input,
 };
 
 #[derive(Default)]
@@ -26,14 +27,14 @@ impl Parse for AocEntry {
                     return Err(syn::Error::new(
                         day.span(),
                         format!("cannot parse day (between 1 and 25) {d}"),
-                    ))
+                    ));
                 }
             },
             None => {
                 return Err(syn::Error::new(
                     day.span(),
                     "day must start with `day` such as `day12`",
-                ))
+                ));
             }
         };
         <Token![,]>::parse(input)?;
@@ -45,14 +46,14 @@ impl Parse for AocEntry {
                     return Err(syn::Error::new(
                         part.span(),
                         format!("cannot parse part (1 or 2) {d}"),
-                    ))
+                    ));
                 }
             },
             None => {
                 return Err(syn::Error::new(
                     part.span(),
                     "part must start with `part` such as `part12`",
-                ))
+                ));
             }
         };
         let mut entry = AocEntry {
