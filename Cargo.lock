@@ -102,7 +102,6 @@ dependencies = [
  "eyre",
  "insta",
  "itertools",
- "lazy_static",
  "mktemp",
  "serial_test",
  "thiserror",
