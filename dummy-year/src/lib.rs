@@ -5,7 +5,6 @@
     clippy::cast_possible_wrap,
     clippy::cast_precision_loss,
     clippy::cast_sign_loss,
-    clippy::match_on_vec_items,
     clippy::module_name_repetitions,
     clippy::similar_names
 )]
