@@ -27,8 +27,7 @@ pub fn build() -> eyre::Result<()> {
         if !file
             .file_name()
             .into_string()
-            .map(|s| s.ends_with(".rs"))
-            .unwrap_or(false)
+            .is_ok_and(|s| s.ends_with(".rs"))
         {
             continue;
         }
