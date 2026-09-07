@@ -1,7 +1,6 @@
 #![deny(clippy::pedantic)]
 
 use proc_macro::TokenStream;
-use proc_macro_error2::{abort, proc_macro_error};
 use quote::{ToTokens, quote};
 use syn::{
     FnArg, Ident, ItemFn, LitChar, LitStr, PatType, ReturnType, Token,
@@ -84,7 +83,6 @@ impl Parse for AocEntry {
 }
 
 #[proc_macro_attribute]
-#[proc_macro_error]
 pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
     let aoc_entry = parse_macro_input!(attr as AocEntry);
     let day = aoc_entry.day;
@@ -164,7 +162,11 @@ pub fn aoc(attr: TokenStream, input: TokenStream) -> TokenStream {
             )
         }
         ReturnType::Type(_, ref t) => (quote!(Ok(#func_name #inputs)), quote!(::eyre::Result<#t>)),
-        ReturnType::Default => abort!(func.sig, "AOC part cannot return ()"),
+        ReturnType::Default => {
+            return syn::Error::new_spanned(func.sig, "AOC part cannot return ()")
+                .to_compile_error()
+                .into();
+        }
     };
     quote! {
         #func
