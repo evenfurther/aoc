@@ -8,7 +8,7 @@ pub enum Error {
     Utf8(#[from] FromUtf8Error),
     #[error(transparent)]
     Other(#[from] eyre::Report),
-    #[error("no output for day {day} part {part}{}", variant.map(|v| format!(r#" (variant "{v}""#)).unwrap_or_default())]
+    #[error("no output for day {day} part {part}{}", variant.map_or_default(|v| format!(r#" (variant "{v}""#)))]
     NoOutput {
         day: usize,
         part: usize,
