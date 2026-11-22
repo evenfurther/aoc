@@ -9,5 +9,5 @@ license = "Apache-2.0/MIT"
 [dependencies]
 eyre = "0.6.14"
 prettyplease = "0.3.0"
-regex = "1.13.1"
-syn = "3.0.5"
+proc-macro2 = "1.0.107"
+syn = { version = "3.0.5", features = ["full", "parsing", "printing"] }
