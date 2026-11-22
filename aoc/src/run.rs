@@ -1,4 +1,4 @@
-use chrono::{Datelike, Duration};
+use chrono::{Datelike, Duration, FixedOffset, Utc};
 use clap::Parser;
 use std::fmt::Write;
 
@@ -95,6 +95,13 @@ where
     Ok(results)
 }
 
+/// Puzzles are released at midnight EST (UTC-5), so the "current" puzzle day
+/// must be computed in that timezone rather than in UTC or local time.
+fn puzzle_day(now: chrono::DateTime<Utc>) -> usize {
+    let est = FixedOffset::west_opt(5 * 3600).unwrap();
+    now.with_timezone(&est).day() as usize
+}
+
 pub fn run<F>(register: F) -> eyre::Result<()>
 where
     F: Fn(),
@@ -113,7 +120,7 @@ where
     if let Some(input) = opts.input {
         super::input::OVERRIDE_INPUT.set(input).unwrap();
     }
-    let current_day = opts.day.unwrap_or(chrono::Utc::now().day() as usize);
+    let current_day = opts.day.unwrap_or_else(|| puzzle_day(Utc::now()));
     println!(
         "{}",
         run_tests(
@@ -125,4 +132,20 @@ where
         )?
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::puzzle_day;
+    use chrono::{TimeZone, Utc};
+
+    #[test]
+    fn puzzle_day_follows_est() {
+        // 04:59 UTC on Dec 5th is still Dec 4th in EST.
+        let t = Utc.with_ymd_and_hms(2026, 12, 5, 4, 59, 0).unwrap();
+        assert_eq!(puzzle_day(t), 4);
+        // 05:00 UTC on Dec 5th is midnight EST: day 5 is out.
+        let t = Utc.with_ymd_and_hms(2026, 12, 5, 5, 0, 0).unwrap();
+        assert_eq!(puzzle_day(t), 5);
+    }
 }
