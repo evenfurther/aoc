@@ -38,9 +38,12 @@ pub fn check_results<F: Fn(), P: AsRef<Path>>(
     expected: P,
     main_only: bool,
 ) -> eyre::Result<bool> {
-    let actual = super::run::run_tests(register, None, None, main_only, false)?;
+    let (actual, failures) = super::run::run_tests(register, None, None, main_only, false)?;
     let update = std::env::var(ENV_VAR).is_ok();
     if update {
+        if failures > 0 {
+            bail!("{failures} solution(s) failed, refusing to record results");
+        }
         if !matches!(equal_content(&actual, &expected, false), Ok(true)) {
             std::fs::write(expected, actual)?;
         }

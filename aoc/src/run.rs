@@ -57,12 +57,13 @@ pub fn run_tests<F>(
     single_part: Option<usize>,
     main_only: bool,
     timings: bool,
-) -> eyre::Result<String>
+) -> eyre::Result<(String, usize)>
 where
     F: Fn(),
 {
     register();
     let mut results = String::new();
+    let mut failures = 0;
     let mut runners = super::runners::RUNNERS.lock().unwrap();
     let keys = runners.keys().copied().collect::<Vec<_>>();
     for (day, part) in keys {
@@ -80,11 +81,20 @@ where
                     write!(&mut results, " — {version}")?;
                 }
                 let before = chrono::Utc::now();
-                let result = runner()?;
+                let outcome = call_runner(runner);
                 let after = chrono::Utc::now();
-                if timings {
-                    write!(&mut results, " ({})", pretty_duration(after - before))?;
-                }
+                let result = match outcome {
+                    Ok(result) => {
+                        if timings {
+                            write!(&mut results, " ({})", pretty_duration(after - before))?;
+                        }
+                        result
+                    }
+                    Err(e) => {
+                        failures += 1;
+                        format!("ERROR: {e}")
+                    }
+                };
                 write!(&mut results, ": ")?;
                 let sep = format!("\n{}", " ".repeat(results.chars().count() - results_start));
                 write!(&mut results, "{}", result.trim().replace('\n', &sep))?;
@@ -92,7 +102,21 @@ where
             }
         }
     }
-    Ok(results)
+    Ok((results, failures))
+}
+
+/// Run a solution, turning both errors and panics into a printable message
+/// so that one failing day does not prevent the others from running.
+fn call_runner(runner: Box<super::runners::Runner>) -> Result<String, String> {
+    match std::panic::catch_unwind(std::panic::AssertUnwindSafe(runner)) {
+        Ok(Ok(result)) => Ok(result),
+        Ok(Err(e)) => Err(format!("{e:#}")),
+        Err(payload) => Err(payload
+            .downcast_ref::<&str>()
+            .map(|s| (*s).to_owned())
+            .or_else(|| payload.downcast_ref::<String>().cloned())
+            .map_or_else(|| String::from("panic"), |m| format!("panic: {m}"))),
+    }
 }
 
 /// Puzzles are released at midnight EST (UTC-5), so the "current" puzzle day
@@ -121,16 +145,17 @@ where
         super::input::OVERRIDE_INPUT.set(input).unwrap();
     }
     let current_day = opts.day.unwrap_or_else(|| puzzle_day(Utc::now()));
-    println!(
-        "{}",
-        run_tests(
-            register,
-            (!opts.all).then_some(current_day),
-            opts.part,
-            opts.main_only,
-            opts.timing
-        )?
-    );
+    let (results, failures) = run_tests(
+        register,
+        (!opts.all).then_some(current_day),
+        opts.part,
+        opts.main_only,
+        opts.timing,
+    )?;
+    println!("{results}");
+    if failures > 0 {
+        eyre::bail!("{failures} solution(s) failed");
+    }
     Ok(())
 }
 
@@ -138,6 +163,23 @@ where
 mod tests {
     use super::puzzle_day;
     use chrono::{TimeZone, Utc};
+
+    #[test]
+    fn failures_do_not_stop_other_days() {
+        fn register() {
+            crate::register_runner(20, 1, None, || -> eyre::Result<u32> { Ok(1) });
+            crate::register_runner(20, 2, None, || -> eyre::Result<u32> { eyre::bail!("boom") });
+            crate::register_runner(21, 1, None, || -> eyre::Result<u32> { panic!("kaboom") });
+            crate::register_runner(21, 2, None, || -> eyre::Result<u32> { Ok(4) });
+        }
+        let (results, failures) = super::run_tests(register, None, None, false, false).unwrap();
+        assert_eq!(failures, 2);
+        assert_eq!(
+            results,
+            "Day 20 - part 1: 1\nDay 20 - part 2: ERROR: boom\n\
+             Day 21 - part 1: ERROR: panic: kaboom\nDay 21 - part 2: 4\n"
+        );
+    }
 
     #[test]
     fn puzzle_day_follows_est() {

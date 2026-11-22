@@ -6,7 +6,7 @@ use std::{
     sync::{LazyLock, Mutex},
 };
 
-type Runner = dyn FnOnce() -> eyre::Result<String> + Send + Sync + 'static;
+pub(crate) type Runner = dyn FnOnce() -> eyre::Result<String> + Send + Sync + 'static;
 
 pub(crate) static RUNNERS: LazyLock<
     Mutex<BTreeMap<(usize, usize), Vec<(Option<String>, Box<Runner>)>>>,
