@@ -8,7 +8,7 @@ pub enum Error {
     Utf8(#[from] FromUtf8Error),
     #[error(transparent)]
     Other(#[from] eyre::Report),
-    #[error("no output for day {day} part {part}{}", variant.map_or_default(|v| format!(r#" (variant "{v}""#)))]
+    #[error("no output for day {day} part {part}{}", variant.map_or_default(|v| format!(r#" (variant "{v}")"#)))]
     NoOutput {
         day: usize,
         part: usize,
@@ -22,5 +22,29 @@ impl Error {
         E: Into<eyre::Report>,
     {
         Error::Other(e.into())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Error;
+
+    #[test]
+    fn no_output_message() {
+        let e = Error::NoOutput {
+            day: 3,
+            part: 2,
+            variant: Some("fast"),
+        };
+        assert_eq!(
+            e.to_string(),
+            r#"no output for day 3 part 2 (variant "fast")"#
+        );
+        let e = Error::NoOutput {
+            day: 3,
+            part: 2,
+            variant: None,
+        };
+        assert_eq!(e.to_string(), "no output for day 3 part 2");
     }
 }
