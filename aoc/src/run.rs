@@ -1,6 +1,6 @@
-use chrono::{Datelike, Duration, FixedOffset, Utc};
 use clap::Parser;
 use std::fmt::Write;
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 #[derive(Parser)]
 #[clap(version, author)]
@@ -33,20 +33,14 @@ struct Opts {
 
 #[allow(clippy::cast_precision_loss)]
 fn pretty_duration(duration: Duration) -> String {
-    if duration < Duration::microseconds(1) {
-        format!("{} ns", duration.num_nanoseconds().unwrap())
-    } else if duration < Duration::milliseconds(1) {
-        format!(
-            "{:.2} µs",
-            duration.num_nanoseconds().unwrap() as f32 / 1000.0
-        )
-    } else if duration < Duration::seconds(1) {
-        format!(
-            "{:.2} ms",
-            duration.num_microseconds().unwrap() as f32 / 1000.0
-        )
+    if duration < Duration::from_micros(1) {
+        format!("{} ns", duration.as_nanos())
+    } else if duration < Duration::from_millis(1) {
+        format!("{:.2} µs", duration.as_nanos() as f32 / 1000.0)
+    } else if duration < Duration::from_secs(1) {
+        format!("{:.2} ms", duration.as_micros() as f32 / 1000.0)
     } else {
-        format!("{:.2} s", duration.num_milliseconds() as f32 / 1000.0)
+        format!("{:.2} s", duration.as_millis() as f32 / 1000.0)
     }
 }
 
@@ -80,13 +74,13 @@ where
                 if let Some(version) = version {
                     write!(&mut results, " — {version}")?;
                 }
-                let before = chrono::Utc::now();
+                let before = Instant::now();
                 let outcome = call_runner(runner);
-                let after = chrono::Utc::now();
+                let elapsed = before.elapsed();
                 let result = match outcome {
                     Ok(result) => {
                         if timings {
-                            write!(&mut results, " ({})", pretty_duration(after - before))?;
+                            write!(&mut results, " ({})", pretty_duration(elapsed))?;
                         }
                         result
                     }
@@ -121,9 +115,22 @@ fn call_runner(runner: Box<super::runners::Runner>) -> Result<String, String> {
 
 /// Puzzles are released at midnight EST (UTC-5), so the "current" puzzle day
 /// must be computed in that timezone rather than in UTC or local time.
-fn puzzle_day(now: chrono::DateTime<Utc>) -> usize {
-    let est = FixedOffset::west_opt(5 * 3600).unwrap();
-    now.with_timezone(&est).day() as usize
+fn puzzle_day(seconds_since_epoch: u64) -> usize {
+    const EST_OFFSET: u64 = 5 * 3600;
+    let days = seconds_since_epoch.saturating_sub(EST_OFFSET) / 86_400;
+    day_of_month(days)
+}
+
+/// Day of month for a number of days since 1970-01-01, using Howard
+/// Hinnant's `civil_from_days` algorithm (proleptic Gregorian calendar).
+#[allow(clippy::cast_possible_truncation)]
+fn day_of_month(days_since_epoch: u64) -> usize {
+    let z = days_since_epoch + 719_468;
+    let doe = z % 146_097;
+    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    (doy - (153 * mp + 2) / 5 + 1) as usize
 }
 
 pub fn run<F>(register: F) -> eyre::Result<()>
@@ -144,7 +151,13 @@ where
     if let Some(input) = opts.input {
         super::input::OVERRIDE_INPUT.set(input).unwrap();
     }
-    let current_day = opts.day.unwrap_or_else(|| puzzle_day(Utc::now()));
+    let current_day = opts.day.unwrap_or_else(|| {
+        puzzle_day(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map_or(0, |d| d.as_secs()),
+        )
+    });
     let (results, failures) = run_tests(
         register,
         (!opts.all).then_some(current_day),
@@ -161,8 +174,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::puzzle_day;
-    use chrono::{TimeZone, Utc};
+    use super::{day_of_month, pretty_duration, puzzle_day};
+    use std::time::Duration;
 
     #[test]
     fn failures_do_not_stop_other_days() {
@@ -183,11 +196,25 @@ mod tests {
 
     #[test]
     fn puzzle_day_follows_est() {
-        // 04:59 UTC on Dec 5th is still Dec 4th in EST.
-        let t = Utc.with_ymd_and_hms(2026, 12, 5, 4, 59, 0).unwrap();
-        assert_eq!(puzzle_day(t), 4);
-        // 05:00 UTC on Dec 5th is midnight EST: day 5 is out.
-        let t = Utc.with_ymd_and_hms(2026, 12, 5, 5, 0, 0).unwrap();
-        assert_eq!(puzzle_day(t), 5);
+        // 2026-12-05T04:59:00Z is still Dec 4th in EST.
+        assert_eq!(puzzle_day(1_796_446_740), 4);
+        // 2026-12-05T05:00:00Z is midnight EST: day 5 is out.
+        assert_eq!(puzzle_day(1_796_446_800), 5);
+    }
+
+    #[test]
+    fn day_of_month_matches_calendar() {
+        assert_eq!(day_of_month(0), 1); // 1970-01-01
+        assert_eq!(day_of_month(59), 1); // 1970-03-01
+        assert_eq!(day_of_month(11_016), 29); // 2000-02-29
+        assert_eq!(day_of_month(20_818), 31); // 2026-12-31
+    }
+
+    #[test]
+    fn pretty_durations() {
+        assert_eq!(pretty_duration(Duration::from_nanos(800)), "800 ns");
+        assert_eq!(pretty_duration(Duration::from_nanos(1_500)), "1.50 µs");
+        assert_eq!(pretty_duration(Duration::from_micros(2_250)), "2.25 ms");
+        assert_eq!(pretty_duration(Duration::from_millis(3_500)), "3.50 s");
     }
 }
